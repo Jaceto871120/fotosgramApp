@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 import { environment } from '../../environments/environment';
 import { Usuario } from '../interfaces/interfaces';
+import { NavController } from '@ionic/angular';
 
 const URL = environment.url;
 
@@ -12,9 +13,11 @@ const URL = environment.url;
 export class UsuarioService {
 
   token: string = null;
+  usuario: Usuario = {};
 
   constructor( private http: HttpClient,
-               private storage: Storage) { }
+               private storage: Storage,
+               private navController: NavController) { }
 
   login(email: string, password: string) {
 
@@ -24,9 +27,11 @@ export class UsuarioService {
 
       this.http.post( URL + '/user/login', data).subscribe( resp => {
         console.log(resp);
+        const okLogin = 'ok';
+        const tokenLogin = 'token';
 
-        if (resp[ 'ok' ]) {
-          this.guardarToken(resp['token']);
+        if (resp[okLogin]) {
+          this.guardarToken(resp[tokenLogin]);
           resolve(true);
         }else{
           this.token = null;
@@ -43,8 +48,11 @@ export class UsuarioService {
       this.http.post( URL + '/user/create', usuario).subscribe( resp => {
         console.log(resp);
 
-        if (resp[ 'ok' ]) {
-          this.guardarToken(resp['token']);
+        const okRegistro = 'ok';
+        const tokenRegistro = 'token';
+
+        if (resp[ okRegistro ]) {
+          this.guardarToken(resp[tokenRegistro]);
           resolve(true);
         }else{
           this.token = null;
@@ -58,5 +66,38 @@ export class UsuarioService {
   async guardarToken(token: string) {
     this.token = token;
     await this.storage.set('token', token);
+  }
+
+  async cargarToken(){
+    this.token = await this.storage.get('token') || null;
+  }
+
+  async validaToken(): Promise<boolean>{
+
+    await this.cargarToken();
+
+    if (!this.token){
+      this.navController.navigateRoot('/login');
+      return Promise.resolve(false);
+    }
+
+    return new Promise<boolean>(resolve => {
+
+      const headers = new HttpHeaders({
+        'x-token': this.token
+      });
+
+      this.http.get( URL + '/user/', {headers} ).subscribe( resp => {
+        const okValidar = 'ok';
+        const usuarioValidar = 'usuario';
+        if (resp[okValidar]){
+          this.usuario = resp[usuarioValidar];
+          resolve(true);
+        }else{
+          this.navController.navigateRoot('/login');
+          resolve(false);
+        }
+      });
+    });
   }
 }
