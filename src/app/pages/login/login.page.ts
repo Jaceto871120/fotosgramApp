@@ -62,6 +62,7 @@ export class LoginPage implements OnInit {
     email: 'test',
     password: '123456',
     nombre: 'Test',
+    avatar: 'av-1.png'
   };
 
   constructor(private usuarioService: UsuarioService,
