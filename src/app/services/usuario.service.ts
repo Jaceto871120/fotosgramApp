@@ -13,7 +13,7 @@ const URL = environment.url;
 export class UsuarioService {
 
   token: string = null;
-  usuario: Usuario = {};
+  private usuario: Usuario = {};
 
   constructor( private http: HttpClient,
                private storage: Storage,
@@ -26,7 +26,6 @@ export class UsuarioService {
     return new Promise(resolve => {
 
       this.http.post( URL + '/user/login', data).subscribe( resp => {
-        console.log(resp);
         const okLogin = 'ok';
         const tokenLogin = 'token';
 
@@ -46,7 +45,6 @@ export class UsuarioService {
     return new Promise( resolve => {
 
       this.http.post( URL + '/user/create', usuario).subscribe( resp => {
-        console.log(resp);
 
         const okRegistro = 'ok';
         const tokenRegistro = 'token';
@@ -61,6 +59,14 @@ export class UsuarioService {
         }
       });
     });
+  }
+
+  getUsuario(){
+
+    if (!this.usuario._id){
+      this.validaToken();
+    }
+    return {...this.usuario};
   }
 
   async guardarToken(token: string) {
@@ -95,6 +101,28 @@ export class UsuarioService {
           resolve(true);
         }else{
           this.navController.navigateRoot('/login');
+          resolve(false);
+        }
+      });
+    });
+  }
+
+  actualizarUsuario( usuario: Usuario ){
+
+    const headers = new HttpHeaders({
+      'x-token': this.token
+    });
+
+    return new Promise(resolve =>{
+      this.http.post( URL + '/user/update', usuario, {headers}).subscribe(resp => {
+
+        const okActualizar = 'ok';
+        const tokenActualizar = 'token';
+
+        if (resp[okActualizar]){
+          this.guardarToken(resp[tokenActualizar]);
+          resolve(true);
+        }else{
           resolve(false);
         }
       });
