@@ -9,18 +9,19 @@
         </ion-label>
     </ion-item>
 
-    <!-- ion-slides mode="ios" pager="true" scrollbar="ios">
-        <ion-slide class="image-slide" [style]="img1 |domSanitizer">
+    <ion-slides mode="ios" pager="true" scrollbar="ios" *ngIf="post.imgs.length > 1">
+        <ion-slide *ngFor="let img of post.imgs" class="image-slide" [style.background-image]="(img | imagen: post.usuario._id) | domSanitizer">
         </ion-slide>
-        <ion-slide class="image-slide" [style]="img2 |domSanitizer">
+    </ion-slides>
+
+    <ion-slides mode="ios" pager="true" scrollbar="ios" *ngIf="post.imgs.length === 1" [options]=slideSoloOpts>
+        <ion-slide class="image-slide" [style.background-image]="(post.imgs[0] | imagen: post.usuario._id) | domSanitizer">
         </ion-slide>
-        <ion-slide class="image-slide" [style]="img3 |domSanitizer">
-        </ion-slide>
-    </ion-slides -->
+    </ion-slides>
 
     <!-- mapa -->
 
-    <app-mapa [coords]="post.coords"></app-mapa>
+    <app-mapa [coords]="post.coords" *ngIf="post.coords"></app-mapa>
 
     <ion-item lines="none">
         <ion-icon slot="start" name="heart-outline"></ion-icon>

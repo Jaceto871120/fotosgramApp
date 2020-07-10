@@ -3,7 +3,7 @@
     <name>Fotosgram</name>
     <description>Una aplicacion de fotografias</description>
     <author email="jair.celis.torrado@gmail.com" href="http://ionicframework.com/">Jair Armando Celis Torrado</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://localhost:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -99,8 +99,20 @@
     <plugin name="cordova-plugin-splashscreen" spec="5.0.2" />
     <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
-
-    <edit-config target="NSLocationAlwaysUsageDescription" file="*-Info.plist" mode="merge">
+    <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysUsageDescription">
         <string>Necesito su autorizacion para saber su ubicacion</string>
     </edit-config>
+    <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
+        <string>Necesito acceso a la camara para tomar fotografias</string>
+    </edit-config>
+    <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
+        <string>Necesito acceso a la biblioteca para seleccionar imagenes de alli</string>
+    </edit-config>
+    <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+        <string>Necesito acceso a la ubicacion para encontrar algo cerca</string>
+    </edit-config>
+    <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryAddUsageDescription">
+        <string>Necesito acceso a la biblioteca para guardar las fotografias</string>
+    </edit-config>
+    <allow-navigation href="http://localhost:8100" sessionid="27ef0b0b" />
 </widget>
