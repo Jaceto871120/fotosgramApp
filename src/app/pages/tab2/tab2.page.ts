@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { PostsService } from '../../services/posts.service';
 import { Router } from '@angular/router';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+
 
 @Component({
   selector: 'app-tab2',
@@ -10,6 +12,7 @@ import { Router } from '@angular/router';
 export class Tab2Page {
 
   tempImages: string[] = [];
+  cargandoGeo = false;
 
   post = {
     mensaje: '',
@@ -18,7 +21,8 @@ export class Tab2Page {
   };
 
   constructor(private postsService: PostsService,
-              private route: Router) {}
+              private route: Router,
+              private geolocation: Geolocation) {}
 
   async crearPost() {
     const creado = await this.postsService.crearPost(this.post);
@@ -32,4 +36,25 @@ export class Tab2Page {
     this.route.navigateByUrl('/main/tabs/tab1');
   }
 
+  getGeo(){
+    if (!this.post.posicion){
+      this.post.coords = null;
+      return;
+    }
+
+    this.cargandoGeo = true;
+
+    this.geolocation.getCurrentPosition().then((resp) => {
+      // resp.coords.latitude
+      // resp.coords.longitude
+      this.cargandoGeo = false;
+
+      const coords = resp.coords.latitude + ',' + resp.coords.longitude;
+      console.log(coords);
+      this.post.coords = coords;
+     }).catch((error) => {
+       console.log('Error getting location', error);
+       this.cargandoGeo = false;
+     });
+  }
 }
