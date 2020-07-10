@@ -3,7 +3,7 @@
     <name>Fotosgram</name>
     <description>Una aplicacion de fotografias</description>
     <author email="jair.celis.torrado@gmail.com" href="http://ionicframework.com/">Jair Armando Celis Torrado</author>
-    <content original-src="index.html" src="http://localhost:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -114,5 +114,4 @@
     <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryAddUsageDescription">
         <string>Necesito acceso a la biblioteca para guardar las fotografias</string>
     </edit-config>
-    <allow-navigation href="http://localhost:8100" sessionid="27ef0b0b" />
 </widget>
